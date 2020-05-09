@@ -164,3 +164,6 @@ It is certainly nice to know when you are editing a bad record. But is it best t
 The logic to fetch resources is very similar in both `loadFromServer` and `onNavigate`. Do you see ways to avoid duplicate code?
 
 You put the JSON Schema metadata to good use in building up the `CreateDialog` and the `UpdateDialog` inputs. Do you see other places to use the metadata to makes things more generic? Imagine you wanted to add five more fields to `Employee.java`. What would it take to update the UI?
+
+Rest call with :
+http://localhost:8080/functions?operation=x&deviceIds=x

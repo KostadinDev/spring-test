@@ -17,6 +17,7 @@ package com.greglturnquist.payroll;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author Greg Turnquist
@@ -29,6 +30,8 @@ public class HomeController {
 	public String index() {
 		return "index";
 	}
+
+
 
 }
 // end::code[]
