@@ -9,4 +9,6 @@ public class Constants {
     public static String CONTENTTYPEJSON="application/json";
     public static String CONTENTTYPEFORM="application/x-www-form-urlencoded";
 
+    public static String BASEURL2 = "https://api-manage.dseelab.com/";
+
 }

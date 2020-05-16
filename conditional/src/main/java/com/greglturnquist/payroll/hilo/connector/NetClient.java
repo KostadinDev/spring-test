@@ -1,10 +1,13 @@
 package com.greglturnquist.payroll.hilo.connector;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.springframework.http.RequestEntity;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -230,6 +233,73 @@ public class NetClient {
         }
         return sb.toString();
 
+    }
+
+    public String  callMultiPatrtRequest(String urlString, String filename)
+          {
+              try {
+                  URL url = new URL(urlString);
+                  HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                  conn.setReadTimeout(10000);
+                  conn.setConnectTimeout(15000);
+                  conn.setRequestMethod("POST");
+                  conn.setUseCaches(false);
+                  conn.setDoInput(true);
+                  conn.setDoOutput(true);
+
+                  conn.setRequestProperty("Connection", "Keep-Alive");
+                  MultipartEntity reqEntity=getRequestEntity(filename);
+                  conn.addRequestProperty("Content-length", reqEntity.getContentLength()+"");
+                  conn.addRequestProperty(reqEntity.getContentType().getName(), reqEntity.getContentType().getValue());
+
+                  OutputStream os = conn.getOutputStream();
+                  reqEntity.writeTo(conn.getOutputStream());
+                  os.close();
+                  conn.connect();
+
+                  if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                      return readStream(conn.getInputStream());
+                  }
+
+              } catch (Exception e) {
+                  e.printStackTrace();
+              }
+              return null;
+    }
+
+    private static String readStream(InputStream in) {
+        BufferedReader reader = null;
+        StringBuilder builder = new StringBuilder();
+        try {
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return builder.toString();
+    }
+
+    public MultipartEntity getRequestEntity(String filename){
+
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        ContentBody contentPart = new ByteArrayBody(bos.toByteArray(), filename);
+
+        MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        reqEntity.addPart(filename, contentPart);
+        return reqEntity;
     }
 
 

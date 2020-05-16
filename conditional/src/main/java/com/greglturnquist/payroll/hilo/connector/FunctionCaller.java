@@ -13,7 +13,15 @@ public class FunctionCaller {
         String token= TokenReceiver.getToken();
         String paramsString= Helper.getDataString(params);
         NetClient netClient=new NetClient();
-        String result = netClient.callpost(Constants.BASEURL + functionRoute, paramsString, token,contentType);
+        String result = netClient.callpost(Constants.BASEURL2 + functionRoute, paramsString, token,contentType);
+        return result;
+    }
+
+    public String callFunctionJson(String functionRoute, String params, String contentType)throws UnsupportedEncodingException {
+        String token= TokenReceiver.getToken();
+
+        NetClient netClient=new NetClient();
+        String result = netClient.callpost(Constants.BASEURL + functionRoute, params, token,contentType);
         return result;
     }
 }
