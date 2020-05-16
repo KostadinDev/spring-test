@@ -113,7 +113,7 @@ public class NetClient {
     }
 
 
-    public String callget(String urlstring) {
+    public String callget(String urlstring, String bearer) {
         StringBuffer sb = new StringBuffer();
 
         try {
@@ -122,6 +122,7 @@ public class NetClient {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
+            if (bearer != null) conn.setRequestProperty("Authorization", "Bearer " + bearer);
             if (conn.getResponseCode() != 200)
                 LOGGER.log(Level.INFO, "response code method get" + conn.getResponseCode());
 		/*	if (conn.getResponseCode() != 200) {
@@ -235,7 +236,7 @@ public class NetClient {
 
     }
 
-    public String  callMultiPatrtRequest(String urlString, String filename)
+    public String  callMultiPatrtRequest(String urlString, String filename, String bearer)
           {
               try {
                   URL url = new URL(urlString);
@@ -246,7 +247,7 @@ public class NetClient {
                   conn.setUseCaches(false);
                   conn.setDoInput(true);
                   conn.setDoOutput(true);
-
+                  if (bearer != null) conn.setRequestProperty("Authorization", "Bearer " + bearer);
                   conn.setRequestProperty("Connection", "Keep-Alive");
                   MultipartEntity reqEntity=getRequestEntity(filename);
                   conn.addRequestProperty("Content-length", reqEntity.getContentLength()+"");
